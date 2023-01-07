@@ -16,8 +16,8 @@
             <div class="linkFromTimeEdit">
                 <p class="parag">Post LTU Schedule here</p>
                 <input class="form-control" type="text" id="timeEditUrl"> <br>
-                <button type="button" class="btn btn-primary" onclick="fetchData()">Collect Schedule</button>
-                <button type="button" class="btn btn-success" onclick="postToCanvas()">POST TO CANVAS</button>
+                <button type="button" class="btn btn-primary" onclick="fetchData()">Get schedule</button>
+                <button type="button" class="btn btn-success" onclick="postToCanvas()">Post to Canvas</button>
                 <button class='btn btn-info btn-xs btn-edit edit-button' onclick="enableEdit()">Edit</button>
                 <button class="btn btn-primary" type="save" onclick="saveLessons()">Save</button>    
             </div>
@@ -26,11 +26,11 @@
                 <tr class="bg-info">
                     <th hidden class="id">ID</th>
                     <th>Title</th>
-                    <th>location</th>
-                    <th>start date</th>
-                    <th>Start Time</th>
-                    <th>Endtime</th>
-                    <th>info</th> 
+                    <th>Location</th>
+                    <th>Date</th>
+                    <th>Start time</th>
+                    <th>End time</th>
+                    <th>Description</th> 
                 </tr>
                 </thead>
                 <tbody id="currentLessons"> 
