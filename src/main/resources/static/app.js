@@ -1,3 +1,5 @@
+axios.defaults.headers.common['Authorization'] = "Bearer 3755~2k3u907tQT0DHEdWQWhjOe1thoYyJQvmHvB4U9X9WqRsUbDJItcKqS7toy9j90se";
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const lesson = [];
 
@@ -13,14 +15,14 @@ function fetchData() {
 
         $.getJSON(timeEditUrl, function (data) {
             for (let i = 0; i < data.reservations.length; i++) {
-                //console.log(data.reservations[i]);
                 var text = `<tr>                    
                 <td class="id">${data.reservations[i].id}</td>
+                <td class="title"><input type="text" value="${data.reservations[i].columns[1]}" disabled></td>
                 <td>${data.reservations[i].columns[2]}</td>
                 <td>${data.reservations[i].startdate}</td>
                 <td>${data.reservations[i].starttime}</td>
                 <td>${data.reservations[i].endtime}</td>
-                <td>${data.reservations[i].columns[7]}</td>
+    
                 <td class="info"><input type="text" disabled></td>
                 </tr>`;
 
@@ -28,14 +30,17 @@ function fetchData() {
                
                 lesson.push({
                     "id": data.reservations[i].id,
+                    "title": data.reservations[i].columns[2],
                     "location": data.reservations[i].columns[2],
                     "startdate": data.reservations[i].startdate,
                     "starttime": data.reservations[i].starttime,
                     "endtime": data.reservations[i].endtime,
-                    "description": data.reservations[i].columns[7],
+
                     "info": ""
                 });
             }
+            // Hiding Id-column
+            $('.id').hide();
         });
      
     } else {
@@ -44,43 +49,61 @@ function fetchData() {
 }
 
 function enableEdit() {
-    var inputs = document.getElementsByClassName('info');
-    for(var i = 0; i < inputs.length; i++) {
-        inputs[i].firstChild.disabled = false;
+    const infoInput = document.getElementsByClassName('info');
+    for(var i = 0; i < infoInput.length; i++) {
+        infoInput[i].firstChild.disabled = false;
+    }
+
+    const title = document.getElementsByClassName('title');
+    for(var i = 0; i < title.length; i++) {
+        title[i].firstChild.disabled = false;
     }
 }
 
 function saveLessons() {
     var table = document.getElementById('currentLessons');
-    // debugger;
     for(let row of table.rows) {
-        // console.log(row);
+        // Looping through all tables rows
         const id = row.querySelector('.id').innerHTML;
         let infoElement = row.querySelector('.info input');
         infoElement.disabled = true;
         let info = infoElement.value;
 
+        let titleElement = row.querySelector('.title input');
+        titleElement.disabled = true;
+        let title = titleElement.value;
+
+        // Saving info input to to lesson array
         for (let i = 0; i < lesson.length; i++) {
             if (id == lesson[i].id) {
                 lesson[i].info = info;
+                lesson[i].title = title;
             }
         }
     }
-
-    console.log(lesson);
 }
 
+function postToCanvas () {
+    //get params from lesson
+    for (let i = 0; i < lesson.length; i++ ) {
+        const params = new URLSearchParams();
+        params.append('calendar_event[context_code]', 'user_79408');
+        params.append('calendar_event[start_at]', lesson[i].startdate + 'T' + lesson[i].starttime + ':00'); //2023-01-10T10:15:00
+        params.append('calendar_event[end_at]', lesson[i].startdate + 'T' + lesson[i].endtime + ':00'); //2023-01-10T12:00:00
+        params.append('calendar_event[title]', lesson[i].title);
+        params.append('calendar_event[location_name]', lesson[i].location);
+        params.append('calendar_event[description]', lesson[i].info);
 
-async function pushLesson() {
-    const lessonList = await data.reservations.push({
-        "Id": data.reservations[i].id,
-        "Location": data.reservations[i].columns[2],
-        "Startdate": data.reservations[i].startdate,
-        "Starttime": data.reservations[i].starttime,
-        "Endtime": data.reservations[i].endtime,
-        "Description": data.reservations[i].columns[7],
-        "Info": ""
-    });
+        // https://cors-anywhere.herokuapp.com/corsdemo
+        const cors_proxy_url = "https://cors-anywhere.herokuapp.com/";
+        const canvas_api_url = "https://ltu.instructure.com/api/v1/calendar_events.json";
+        axios.post(cors_proxy_url + canvas_api_url, params)
+            .then(function (response) {
+                console.log(response);
+            }).catch(function (error) {
+                console.log(error);
+            });
+    }
 
-    window.alert(lessonList);
 }
+   // location.reload();
