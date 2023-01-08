@@ -22,7 +22,6 @@ function fetchData() {
                 <td>${data.reservations[i].startdate}</td>
                 <td>${data.reservations[i].starttime}</td>
                 <td>${data.reservations[i].endtime}</td>
-    
                 <td class="info"><input type="text" disabled></td>
                 </tr>`;
 
@@ -35,7 +34,6 @@ function fetchData() {
                     "startdate": data.reservations[i].startdate,
                     "starttime": data.reservations[i].starttime,
                     "endtime": data.reservations[i].endtime,
-
                     "info": ""
                 });
             }
